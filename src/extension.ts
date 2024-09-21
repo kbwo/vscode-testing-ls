@@ -1,6 +1,10 @@
-import * as vscode from 'vscode';
-import { LanguageClient } from 'vscode-languageclient/node';
-import { TestingConfig } from './TestingConfig';
+import * as vscode from "vscode";
+import {
+  LanguageClient,
+  ServerOptions,
+  TransportKind,
+} from "vscode-languageclient/node";
+import { TestingConfig } from "./TestingConfig";
 
 let client: LanguageClient;
 
@@ -15,26 +19,28 @@ export function activate(context: vscode.ExtensionContext) {
   }
 
   if (!testingConfig.serverPath) {
-    vscode.window.showErrorMessage('Testing Language Server path is not set. Please configure it in the settings.');
+    vscode.window.showErrorMessage(
+      "Testing Language Server path is not set. Please configure it in the settings."
+    );
     return;
   }
+  const serverPath = testingConfig.serverPath;
+
+  const serverOptions: ServerOptions = {
+    run: { command: serverPath, transport: TransportKind.stdio },
+    debug: { command: serverPath, transport: TransportKind.stdio },
+  };
 
   client = new LanguageClient(
-    'testingLanguageServer',
-    'Testing Language Server',
-    testingConfig.serverOptions,
+    "testingLanguageServer",
+    "Testing Language Server",
+    serverOptions,
     testingConfig.clientOptions
   );
 
   client.start();
-
-  // Enable workspace diagnostics if configured
-  if (testingConfig.enableWorkspaceDiagnostics) {
-    // Implement workspace diagnostics here
-  }
 }
 
-// This method is called when your extension is deactivated
 export function deactivate(): Thenable<void> | undefined {
   if (!client) {
     return undefined;

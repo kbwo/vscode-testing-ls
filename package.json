@@ -11,8 +11,7 @@
     "Linters"
   ],
   "activationEvents": [
-    "onLanguage:rust",
-    "onLanguage:javascript"
+    "*"
   ],
   "main": "./dist/extension.js",
   "contributes": {
