@@ -1,0 +1,96 @@
+{
+  "name": "testing-ls",
+  "displayName": "Testing Language Server",
+  "description": "VS Code extension for the Testing Language Server",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.93.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Linters"
+  ],
+  "activationEvents": [
+    "onLanguage:rust",
+    "onLanguage:javascript"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "vscode-testing-ls.helloWorld",
+        "title": "Hello World"
+      }
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "Testing Language Server",
+      "properties": {
+        "testing.enable": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable the Testing Language Server"
+        },
+        "testing.fileTypes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": ["rust"],
+          "description": "File types to be processed by the Testing Language Server"
+        },
+        "testing.adapterCommand": {
+          "type": "object",
+          "default": {},
+          "description": "Configuration for testing adapters"
+        },
+        "testing.enableWorkspaceDiagnostics": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable workspace diagnostics"
+        },
+        "testing.server.path": {
+          "type": "string",
+          "default": "",
+          "description": "Path to the testing-language-server executable"
+        },
+        "testing.trace.server": {
+          "type": "string",
+          "enum": ["off", "messages", "verbose"],
+          "default": "off",
+          "description": "Traces the communication between VS Code and the Testing language server"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "pnpm run package",
+    "compile": "pnpm run check-types && pnpm run lint && node esbuild.js",
+    "watch": "npm-run-all -p watch:*",
+    "watch:esbuild": "node esbuild.js --watch",
+    "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
+    "package": "pnpm run check-types && pnpm run lint && node esbuild.js --production",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "pnpm run compile-tests && pnpm run compile && pnpm run lint",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.93.0",
+    "@types/mocha": "^10.0.7",
+    "@types/node": "20.x",
+    "@typescript-eslint/eslint-plugin": "^8.3.0",
+    "@typescript-eslint/parser": "^8.3.0",
+    "eslint": "^9.9.1",
+    "esbuild": "^0.23.1",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^5.5.4",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.4.1"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^8.1.0"
+  }
+}
