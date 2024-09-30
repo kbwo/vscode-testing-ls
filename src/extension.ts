@@ -1,10 +1,11 @@
 import * as vscode from "vscode";
+import type { ServerOptions } from "vscode-languageclient/node";
 import {
   LanguageClient,
-  ServerOptions,
   TransportKind,
 } from "vscode-languageclient/node";
 import { TestingConfig } from "./TestingConfig";
+import { runFileTest, runWorkspaceTest } from "./request";
 
 let client: LanguageClient;
 
@@ -39,6 +40,34 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   client.start();
+
+  // Register the runFileTest command
+  const runFileTestDisposable = vscode.commands.registerCommand("vscode-testing-ls.runFileTest", async () => {
+    const editor = vscode.window.activeTextEditor;
+    if (editor) {
+      const document = editor.document;
+      try {
+        const result = await runFileTest(client, document.uri);
+        vscode.window.showInformationMessage(`File test run complete: ${JSON.stringify(result)}`);
+      } catch (error) {
+        vscode.window.showErrorMessage(`Error running file test: ${error}`);
+      }
+    } else {
+      vscode.window.showErrorMessage("No active editor found");
+    }
+  });
+
+  // Register the runWorkspaceTest command
+  const runWorkspaceTestDisposable = vscode.commands.registerCommand("vscode-testing-ls.runWorkspaceTest", async () => {
+    try {
+      const result = await runWorkspaceTest(client);
+      vscode.window.showInformationMessage(`Workspace test run complete: ${JSON.stringify(result)}`);
+    } catch (error) {
+      vscode.window.showErrorMessage(`Error running workspace test: ${error}`);
+    }
+  });
+
+  context.subscriptions.push(runFileTestDisposable, runWorkspaceTestDisposable);
 }
 
 export function deactivate(): Thenable<void> | undefined {
