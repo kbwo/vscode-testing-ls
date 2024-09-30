@@ -10,7 +10,7 @@ export async function runFileTest(client: LanguageClient, uri: Uri) {
 }
 
 export async function runWorkspaceTest(client: LanguageClient) {
-  return client.sendRequest("$/runWorkspaceTest");
+  return await client.sendRequest("$/runWorkspaceTest");
 }
 
 export async function discoverFileTest(client: LanguageClient, uri: Uri) {

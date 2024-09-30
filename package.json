@@ -18,8 +18,14 @@
     "commands": [
       {
         "command": "vscode-testing-ls.runFileTest",
-        "title": "Run File Test"
-      }
+        "title": "Run File Test",
+        "category": "testing-ls"
+      },
+      {
+        "command": "vscode-testing-ls.runWorkspaceTest",
+        "title": "Run Workspace Test",
+        "category": "testing-ls"
+    }
     ],
     "configuration": {
       "type": "object",
