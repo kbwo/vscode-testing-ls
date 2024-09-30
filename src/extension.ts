@@ -5,6 +5,7 @@ import {
   TransportKind,
 } from "vscode-languageclient/node";
 import { TestingConfig } from "./TestingConfig";
+import { runFileTest } from "./request";
 
 let client: LanguageClient;
 
@@ -39,6 +40,23 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   client.start();
+
+  const disposable = vscode.commands.registerCommand("vscode-testing-ls.runFileTest", async () => {
+    const editor = vscode.window.activeTextEditor;
+    if (editor) {
+      const document = editor.document;
+      try {
+        const result = await runFileTest(client, document.uri);
+        vscode.window.showInformationMessage(`File test run complete: ${JSON.stringify(result)}`);
+      } catch (error) {
+        vscode.window.showErrorMessage(`Error running file test: ${error}`);
+      }
+    } else {
+      vscode.window.showErrorMessage("No active editor found");
+    }
+  });
+
+  context.subscriptions.push(disposable);
 }
 
 export function deactivate(): Thenable<void> | undefined {

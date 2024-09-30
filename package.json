@@ -17,8 +17,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "vscode-testing-ls.helloWorld",
-        "title": "Hello World"
+        "command": "vscode-testing-ls.runFileTest",
+        "title": "Run File Test"
       }
     ],
     "configuration": {
