@@ -1,8 +1,13 @@
 {
-  "name": "testing-ls",
+  "name": "testing-language-server",
   "displayName": "Testing Language Server",
   "description": "VS Code extension for the Testing Language Server",
   "version": "0.0.1",
+  "publisher": "kbwo",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kbwo/vscode-testing-ls"
+  },
   "engines": {
     "vscode": "^1.93.0"
   },
@@ -25,7 +30,7 @@
         "command": "vscode-testing-ls.runWorkspaceTest",
         "title": "Run Workspace Test",
         "category": "testing-ls"
-    }
+      }
     ],
     "configuration": {
       "type": "object",
