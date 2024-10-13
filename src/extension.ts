@@ -1,9 +1,6 @@
 import * as vscode from "vscode";
 import type { ServerOptions } from "vscode-languageclient/node";
-import {
-  LanguageClient,
-  TransportKind,
-} from "vscode-languageclient/node";
+import { LanguageClient, TransportKind } from "vscode-languageclient/node";
 import { TestingConfig } from "./TestingConfig";
 import { runFileTest, runWorkspaceTest } from "./request";
 
@@ -42,32 +39,65 @@ export function activate(context: vscode.ExtensionContext) {
   client.start();
 
   // Register the runFileTest command
-  const runFileTestDisposable = vscode.commands.registerCommand("vscode-testing-ls.runFileTest", async () => {
-    const editor = vscode.window.activeTextEditor;
-    if (editor) {
-      const document = editor.document;
-      try {
-        const result = await runFileTest(client, document.uri);
-        vscode.window.showInformationMessage(`File test run complete: ${JSON.stringify(result)}`);
-      } catch (error) {
-        vscode.window.showErrorMessage(`Error running file test: ${error}`);
+  const runFileTestDisposable = vscode.commands.registerCommand(
+    "vscode-testing-ls.runFileTest",
+    async () => {
+      const editor = vscode.window.activeTextEditor;
+      if (editor) {
+        const document = editor.document;
+        try {
+          const result = await runFileTest(client, document.uri);
+          vscode.window.showInformationMessage(
+            `File test run complete: ${JSON.stringify(result)}`
+          );
+        } catch (error) {
+          vscode.window.showErrorMessage(`Error running file test: ${error}`);
+        }
+      } else {
+        vscode.window.showErrorMessage("No active editor found");
       }
-    } else {
-      vscode.window.showErrorMessage("No active editor found");
     }
-  });
+  );
 
   // Register the runWorkspaceTest command
-  const runWorkspaceTestDisposable = vscode.commands.registerCommand("vscode-testing-ls.runWorkspaceTest", async () => {
-    try {
-      const result = await runWorkspaceTest(client);
-      vscode.window.showInformationMessage(`Workspace test run complete: ${JSON.stringify(result)}`);
-    } catch (error) {
-      vscode.window.showErrorMessage(`Error running workspace test: ${error}`);
+  const runWorkspaceTestDisposable = vscode.commands.registerCommand(
+    "vscode-testing-ls.runWorkspaceTest",
+    async () => {
+      try {
+        const result = await runWorkspaceTest(client);
+        vscode.window.showInformationMessage(
+          `Workspace test run complete: ${JSON.stringify(result)}`
+        );
+      } catch (error) {
+        vscode.window.showErrorMessage(
+          `Error running workspace test: ${error}`
+        );
+      }
     }
-  });
+  );
 
-  context.subscriptions.push(runFileTestDisposable, runWorkspaceTestDisposable);
+  // Register the restartServer command
+  const restartServerDisposable = vscode.commands.registerCommand(
+    "vscode-testing-ls.restartServer",
+    async () => {
+      await client.restart();
+    }
+  );
+
+  // Register the clearDiagnostics command
+  const clearDiagnosticsDisposable = vscode.commands.registerCommand(
+    "vscode-testing-ls.clearDiagnostics",
+    async () => {
+      client.diagnostics?.clear();
+    }
+  );
+
+  context.subscriptions.push(
+    runFileTestDisposable,
+    runWorkspaceTestDisposable,
+    restartServerDisposable,
+    clearDiagnosticsDisposable
+  );
 }
 
 export function deactivate(): Thenable<void> | undefined {
