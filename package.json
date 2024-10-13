@@ -2,7 +2,8 @@
   "name": "testing-ls",
   "displayName": "Testing Language Server",
   "description": "VS Code extension for the Testing Language Server",
-  "version": "0.0.1",
+  "version": "0.0.2",
+  "publisher": "kbwo",
   "repository": {
     "type": "git",
     "url": "https://github.com/kbwo/vscode-testing-ls"
