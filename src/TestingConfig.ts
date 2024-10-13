@@ -17,7 +17,7 @@ export class TestingConfig {
   }
 
   get fileTypes(): string[] {
-    return this.config.get<string[]>("fileTypes", ["rust"]);
+    return this.config.get<string[]>("fileTypes", []);
   }
 
   get enableWorkspaceDiagnostics(): boolean {
