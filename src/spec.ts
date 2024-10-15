@@ -33,10 +33,10 @@ export interface WorkspaceAnalysis {
 
 export interface AdapterConfiguration {
   path: string;
-  extraArgs: string[];
+  extraArg: string[];
   envs: Record<string, string>;
-  includePatterns: string[];
-  excludePatterns: string[];
+  include: string[];
+  exclude: string[];
   workspaceDir?: string;
 }
 
